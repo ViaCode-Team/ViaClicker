@@ -1,0 +1,179 @@
+﻿<Window
+    x:Class="ViaClicker.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ViaClicker"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="800"
+    Height="650"
+    Background="{StaticResource MaterialDesignLightSeparatorBackground}"
+    Foreground="{StaticResource MaterialDesignBody}"
+    ResizeMode="NoResize"
+    Style="{StaticResource MaterialDesignWindow}"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <!--  Material Design Dark theme + palettes  -->
+        <ResourceDictionary>
+            <!--  Reusable sizes  -->
+            <Thickness x:Key="CardPadding">18</Thickness>
+
+            <Style x:Key="SectionHeader" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Margin" Value="0,0,0,8" />
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Left column: настройки  -->
+        <materialDesign:Card
+            Grid.Column="0"
+            Padding="{StaticResource CardPadding}"
+            materialDesign:ElevationAssist.Elevation="Dp8">
+            <StackPanel>
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Настройки клика" />
+
+                <!--  Интервал и единицы  -->
+                <StackPanel
+                    Margin="0,4,0,12"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <StackPanel Width="120">
+                        <TextBox
+                            x:Name="IntervalTextBox"
+                            Padding="10"
+                            VerticalContentAlignment="Center"
+                            materialDesign:HintAssist.Hint="Интервал"
+                            materialDesign:TextFieldAssist.HasClearButton="True"
+                            FontSize="14"
+                            Foreground="{StaticResource MaterialDesignBody}"
+                            Text="100" />
+                    </StackPanel>
+
+                    <ComboBox
+                        Margin="12,0,0,0"
+                        VerticalAlignment="Center"
+                        SelectedIndex="0">
+                        <ComboBoxItem>Миллисекунды (ms)</ComboBoxItem>
+                        <ComboBoxItem>Секунды (s)</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+
+                <!--  Режимы и количество кликов  -->
+                <TextBlock Margin="0,6,0,6" Text="Режим" />
+                <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                    <RadioButton
+                        x:Name="ModeContinuous"
+                        Margin="0,0,12,0"
+                        Content="Непрерывно"
+                        IsChecked="True"
+                        Style="{StaticResource MaterialDesignRadioButton}" />
+                    <RadioButton
+                        x:Name="ModeLimited"
+                        Content="Ограниченное"
+                        Style="{StaticResource MaterialDesignRadioButton}" />
+                </StackPanel>
+
+                <StackPanel
+                    Margin="0,0,0,12"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBox
+                        x:Name="CountTextBox"
+                        Width="140"
+                        materialDesign:HintAssist.Hint="Количество кликов"
+                        IsEnabled="False"
+                        Text="100" />
+                    <ToggleButton
+                        x:Name="UseRandomToggle"
+                        Margin="12,0,0,0"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource MaterialDesignSwitchToggleButton}" />
+                </StackPanel>
+
+                <!--  Кнопки мыши  -->
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Кнопка мыши" />
+                <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                    <RadioButton
+                        Margin="0,0,10,0"
+                        Content="Левая"
+                        GroupName="MouseBtn"
+                        IsChecked="True"
+                        Style="{StaticResource MaterialDesignRadioButton}" />
+                    <RadioButton
+                        Margin="0,0,10,0"
+                        Content="Правая"
+                        GroupName="MouseBtn"
+                        Style="{StaticResource MaterialDesignRadioButton}" />
+                    <RadioButton
+                        Content="Колесо"
+                        GroupName="MouseBtn"
+                        Style="{StaticResource MaterialDesignRadioButton}" />
+                </StackPanel>
+
+                <!--  Клавиша запуска/остановки  -->
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Горячая клавиша" />
+                <StackPanel Margin="0,0,0,18" Orientation="Horizontal">
+                    <TextBox
+                        x:Name="HotkeyTextBox"
+                        Width="220"
+                        VerticalContentAlignment="Center"
+                        materialDesign:HintAssist.Hint="Нажмите клавишу для бинда"
+                        IsReadOnly="True" />
+                    <Button
+                        Margin="8,0,0,0"
+                        Content="Очистить"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                </StackPanel>
+
+                <!--  Дополнительные опции  -->
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Дополнительно" />
+                <StackPanel Margin="0,0,0,8" Orientation="Vertical">
+                    <CheckBox
+                        Margin="0,6,0,0"
+                        Content="Останавливать по активному окну"
+                        Style="{StaticResource MaterialDesignCheckBox}" />
+                    <CheckBox
+                        Margin="0,6,0,0"
+                        Content="Запускать при старте системы"
+                        Style="{StaticResource MaterialDesignCheckBox}" />
+                    <CheckBox
+                        Margin="0,6,0,0"
+                        Content="Подтверждение перед стартом"
+                        Style="{StaticResource MaterialDesignCheckBox}" />
+                </StackPanel>
+
+                <!--  Кнопки управления  -->
+                <StackPanel
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button
+                        x:Name="StartButton"
+                        Width="120"
+                        Height="40"
+                        Margin="0,0,12,0"
+                        Content="Start"
+                        Style="{StaticResource MaterialDesignRaisedButton}" />
+                    <Button
+                        x:Name="StopButton"
+                        Width="120"
+                        Height="40"
+                        Content="Stop"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
+
+
+    </Grid>
+</Window>
