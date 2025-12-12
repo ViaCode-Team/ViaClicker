@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:ViaClicker"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="MainWindow"
+    Title="ViaClicker"
     Width="800"
     Height="650"
     Background="{StaticResource MaterialDesignLightSeparatorBackground}"
@@ -16,9 +16,7 @@
     mc:Ignorable="d">
 
     <Window.Resources>
-        <!--  Material Design Dark theme + palettes  -->
         <ResourceDictionary>
-            <!--  Reusable sizes  -->
             <Thickness x:Key="CardPadding">18</Thickness>
 
             <Style x:Key="SectionHeader" TargetType="TextBlock">
@@ -26,6 +24,7 @@
                 <Setter Property="FontWeight" Value="SemiBold" />
                 <Setter Property="Margin" Value="0,0,0,8" />
             </Style>
+
         </ResourceDictionary>
     </Window.Resources>
 
@@ -34,52 +33,54 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!--  Left column: настройки  -->
         <materialDesign:Card
             Grid.Column="0"
             Padding="{StaticResource CardPadding}"
             materialDesign:ElevationAssist.Elevation="Dp8">
             <StackPanel>
-                <TextBlock Style="{StaticResource SectionHeader}" Text="Настройки клика" />
 
-                <!--  Интервал и единицы  -->
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Click settings" />
+
+                <!--  Interval and units  -->
                 <StackPanel
                     Margin="0,4,0,12"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
                     <StackPanel Width="120">
                         <TextBox
-                            x:Name="IntervalTextBox"
                             Padding="10"
                             VerticalContentAlignment="Center"
-                            materialDesign:HintAssist.Hint="Интервал"
+                            materialDesign:HintAssist.Hint="Interval"
                             materialDesign:TextFieldAssist.HasClearButton="True"
                             FontSize="14"
                             Foreground="{StaticResource MaterialDesignBody}"
-                            Text="100" />
+                            Text="{Binding IntervalText, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
 
                     <ComboBox
                         Margin="12,0,0,0"
                         VerticalAlignment="Center"
-                        SelectedIndex="0">
-                        <ComboBoxItem>Миллисекунды (ms)</ComboBoxItem>
-                        <ComboBoxItem>Секунды (s)</ComboBoxItem>
+                        d:SelectedValue="ms"
+                        SelectedValue="{Binding IntervalUnit}"
+                        SelectedValuePath="Tag">
+                        <ComboBoxItem Tag="ms">Milliseconds (ms)</ComboBoxItem>
+                        <ComboBoxItem Tag="s">Seconds (s)</ComboBoxItem>
                     </ComboBox>
                 </StackPanel>
 
-                <!--  Режимы и количество кликов  -->
-                <TextBlock Margin="0,6,0,6" Text="Режим" />
+                <!--  Mode and count  -->
+                <TextBlock Margin="0,6,0,6" Text="Mode" />
                 <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
                     <RadioButton
                         x:Name="ModeContinuous"
                         Margin="0,0,12,0"
-                        Content="Непрерывно"
-                        IsChecked="True"
+                        Content="Continuous"
+                        IsChecked="{Binding IsContinuous, Mode=TwoWay}"
                         Style="{StaticResource MaterialDesignRadioButton}" />
                     <RadioButton
                         x:Name="ModeLimited"
-                        Content="Ограниченное"
+                        Content="Limited"
+                        IsChecked="{Binding IsLimited, Mode=TwoWay}"
                         Style="{StaticResource MaterialDesignRadioButton}" />
                 </StackPanel>
 
@@ -88,92 +89,97 @@
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
                     <TextBox
-                        x:Name="CountTextBox"
                         Width="140"
-                        materialDesign:HintAssist.Hint="Количество кликов"
-                        IsEnabled="False"
-                        Text="100" />
+                        materialDesign:HintAssist.Hint="Click count"
+                        IsEnabled="{Binding IsLimited}"
+                        Text="{Binding ClickCount, UpdateSourceTrigger=PropertyChanged}" />
                     <ToggleButton
-                        x:Name="UseRandomToggle"
                         Margin="12,0,0,0"
                         VerticalAlignment="Center"
+                        IsChecked="{Binding UseRandomInterval, Mode=TwoWay}"
                         Style="{StaticResource MaterialDesignSwitchToggleButton}" />
                 </StackPanel>
 
-                <!--  Кнопки мыши  -->
-                <TextBlock Style="{StaticResource SectionHeader}" Text="Кнопка мыши" />
+                <!--  Mouse button selection  -->
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Mouse button" />
                 <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
                     <RadioButton
                         Margin="0,0,10,0"
-                        Content="Левая"
+                        Content="Left"
                         GroupName="MouseBtn"
                         IsChecked="True"
                         Style="{StaticResource MaterialDesignRadioButton}" />
                     <RadioButton
                         Margin="0,0,10,0"
-                        Content="Правая"
+                        Content="Right"
                         GroupName="MouseBtn"
                         Style="{StaticResource MaterialDesignRadioButton}" />
                     <RadioButton
-                        Content="Колесо"
+                        Content="Middle"
                         GroupName="MouseBtn"
                         Style="{StaticResource MaterialDesignRadioButton}" />
                 </StackPanel>
 
-                <!--  Клавиша запуска/остановки  -->
-                <TextBlock Style="{StaticResource SectionHeader}" Text="Горячая клавиша" />
+                <!--  Hotkey  -->
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Hotkey" />
                 <StackPanel Margin="0,0,0,18" Orientation="Horizontal">
                     <TextBox
                         x:Name="HotkeyTextBox"
                         Width="220"
                         VerticalContentAlignment="Center"
-                        materialDesign:HintAssist.Hint="Нажмите клавишу для бинда"
-                        IsReadOnly="True" />
+                        materialDesign:HintAssist.Hint="Press a key to bind"
+                        IsReadOnly="True"
+                        Text="{Binding HotkeyDisplay}" />
                     <Button
                         Margin="8,0,0,0"
-                        Content="Очистить"
+                        Command="{Binding ClearHotkeyCommand}"
+                        Content="Clear"
                         Style="{StaticResource MaterialDesignOutlinedButton}" />
                 </StackPanel>
 
-                <!--  Дополнительные опции  -->
-                <TextBlock Style="{StaticResource SectionHeader}" Text="Дополнительно" />
+                <!--  Additional options  -->
+                <TextBlock Style="{StaticResource SectionHeader}" Text="Advanced" />
                 <StackPanel Margin="0,0,0,8" Orientation="Vertical">
                     <CheckBox
                         Margin="0,6,0,0"
-                        Content="Останавливать по активному окну"
+                        Content="Stop when window is active"
+                        IsChecked="{Binding StopOnActiveWindow}"
                         Style="{StaticResource MaterialDesignCheckBox}" />
                     <CheckBox
                         Margin="0,6,0,0"
-                        Content="Запускать при старте системы"
+                        Content="Start with system"
+                        IsChecked="{Binding StartWithSystem}"
                         Style="{StaticResource MaterialDesignCheckBox}" />
                     <CheckBox
                         Margin="0,6,0,0"
-                        Content="Подтверждение перед стартом"
+                        Content="Confirm before start"
+                        IsChecked="{Binding ConfirmBeforeStart}"
                         Style="{StaticResource MaterialDesignCheckBox}" />
                 </StackPanel>
 
-                <!--  Кнопки управления  -->
+                <!--  Controls  -->
                 <StackPanel
                     Margin="0,10,0,0"
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
                     <Button
-                        x:Name="StartButton"
                         Width="120"
                         Height="40"
                         Margin="0,0,12,0"
+                        Command="{Binding StartCommand}"
                         Content="Start"
-                        Style="{StaticResource MaterialDesignRaisedButton}" Click="StartButton_Click" />
+                        IsEnabled="{Binding CanStart}"
+                        Style="{StaticResource MaterialDesignRaisedButton}" />
                     <Button
-                        x:Name="StopButton"
                         Width="120"
                         Height="40"
+                        Command="{Binding StopCommand}"
                         Content="Stop"
-                        Style="{StaticResource MaterialDesignOutlinedButton}" Click="StopButton_Click" />
+                        IsEnabled="{Binding IsRunning}"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
                 </StackPanel>
+
             </StackPanel>
         </materialDesign:Card>
-
-
     </Grid>
 </Window>
