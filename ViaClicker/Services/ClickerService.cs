@@ -1,22 +1,23 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using WindowsInput;
-using WindowsInput.Events;
 
 namespace ViaClicker
 {
     public class ClickerService
     {
-        private CancellationTokenSource? cts;
-        private readonly ConfigClicker config;
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, UIntPtr dwExtraInfo);
 
+        private const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
+        private const uint MOUSEEVENTF_LEFTUP = 0x0004;
+
+        private CancellationTokenSource? cts;
         public bool IsRunning { get; private set; }
 
-        public ClickerService()
-        {
-            config = ClickerConfigService.Load();
-        }
+        // жёстко заданный интервал (мс)
+        private const int IntervalMs = 100;
 
         public void Start()
         {
@@ -28,7 +29,7 @@ namespace ViaClicker
             Task.Run(() => Loop(cts.Token));
         }
 
-        public void Pause()
+        public void Stop()
         {
             if (!IsRunning)
                 return;
@@ -41,27 +42,15 @@ namespace ViaClicker
         {
             while (!token.IsCancellationRequested)
             {
-                await Click();
-                await Task.Delay(config.IntervalMs, token);
+                ClickLeft();
+                await Task.Delay(IntervalMs, token);
             }
         }
 
-        private Task Click()
+        private void ClickLeft()
         {
-
-            switch (config.ClickButton)
-            {
-                case MouseButton.Left:
-                    return Simulate.Events().Click().Invoke();
-
-                case MouseButton.Right:
-                    return Simulate.Events().Click().Invoke();
-
-                case MouseButton.Middle:
-                    return Simulate.Events().Click().Invoke();
-            }
-
-            return Task.CompletedTask;
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, UIntPtr.Zero);
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, UIntPtr.Zero);
         }
     }
 }

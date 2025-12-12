@@ -17,7 +17,10 @@
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="WindowsInput" Version="6.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MouseSimLib\MouseSimLib.csproj" />
   </ItemGroup>
 
 </Project>
