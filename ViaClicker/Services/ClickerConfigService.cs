@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using MouseSimLib;
 using Newtonsoft.Json;
 
 namespace ViaClicker
@@ -11,9 +12,11 @@ namespace ViaClicker
         {
             if (!File.Exists(FileName))
                 return CreateDefault();
-            
+
             var json = File.ReadAllText(FileName);
-            return JsonConvert.DeserializeObject<ConfigClicker>(json);
+            var config = JsonConvert.DeserializeObject<ConfigClicker>(json);
+
+            return config ?? CreateDefault();
         }
 
         public static void Save(ConfigClicker config)

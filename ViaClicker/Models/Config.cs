@@ -1,4 +1,6 @@
-﻿namespace ViaClicker
+﻿using MouseSimLib;
+
+namespace ViaClicker
 {
     public class ConfigClicker
     {
@@ -6,12 +8,5 @@
         public MouseButton ClickButton { get; set; }
         public ConsoleKey StartKey { get; set; }
         public ConsoleKey PauseKey { get; set; }
-    }
-
-    public enum MouseButton
-    {
-        Left,
-        Right,
-        Middle
     }
 }
