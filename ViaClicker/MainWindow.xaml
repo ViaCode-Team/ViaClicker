@@ -48,16 +48,19 @@
                     Orientation="Horizontal">
                     <StackPanel Width="120">
                         <TextBox
+                            x:Name="IntervalTextBox"
                             Padding="10"
                             VerticalContentAlignment="Center"
                             materialDesign:HintAssist.Hint="Interval"
                             materialDesign:TextFieldAssist.HasClearButton="True"
                             FontSize="14"
                             Foreground="{StaticResource MaterialDesignBody}"
-                            Text="{Binding IntervalText, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding IntervalText, UpdateSourceTrigger=PropertyChanged}"
+                            TextChanged="IntervalTextChanged" />
                     </StackPanel>
 
                     <ComboBox
+                        x:Name="IntervalUnitComboBox"
                         Margin="12,0,0,0"
                         VerticalAlignment="Center"
                         d:SelectedValue="ms"
@@ -102,22 +105,30 @@
 
                 <!--  Mouse button selection  -->
                 <TextBlock Style="{StaticResource SectionHeader}" Text="Mouse button" />
-                <StackPanel Margin="0,0,0,12" Orientation="Horizontal">
+                <StackPanel
+                    x:Name="MouseButtonPanel"
+                    Margin="0,0,0,12"
+                    Orientation="Horizontal">
                     <RadioButton
-                        Margin="0,0,10,0"
+                        Checked="MouseButton_Checked"
                         Content="Left"
                         GroupName="MouseBtn"
-                        IsChecked="True"
-                        Style="{StaticResource MaterialDesignRadioButton}" />
+                        Style="{StaticResource MaterialDesignRadioButton}"
+                        Tag="0" />
+
                     <RadioButton
-                        Margin="0,0,10,0"
+                        Checked="MouseButton_Checked"
                         Content="Right"
                         GroupName="MouseBtn"
-                        Style="{StaticResource MaterialDesignRadioButton}" />
+                        Style="{StaticResource MaterialDesignRadioButton}"
+                        Tag="1" />
+
                     <RadioButton
+                        Checked="MouseButton_Checked"
                         Content="Middle"
                         GroupName="MouseBtn"
-                        Style="{StaticResource MaterialDesignRadioButton}" />
+                        Style="{StaticResource MaterialDesignRadioButton}"
+                        Tag="2" />
                 </StackPanel>
 
                 <!--  Hotkey  -->
